@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Kubernetes - Container Orchestration</title>
+
+  <meta name="description" content="Kubernetes - Container Orchestration">
+  <meta name="author" content="Karl Fritsche">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="reveal.js/css/reset.css">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="reveal.js/lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+  <!-- Any section element inside of this container is displayed as a slide -->
+  <div class="slides">
+    <section>
+      <h1>Kubernetes - K8S</h1>
+      <h3>Container Orchestration</h3>
+      <p>
+        <small>Created by <a href="https://github.com/attrib">Karl Fritsche</a></small>
+      </p>
+    </section>
+
+    <section>
+      <section>
+        <h2>Containers?</h2>
+        <p class="fragment">OS-level virtualization refers to an operating system paradigm in which the kernel allows the existence of multiple isolated user space instances</p>
+      </section>
+
+      <section>
+        <img src="https://d33wubrfki0l68.cloudfront.net/26a177ede4d7b032362289c6fccd448fc4a91174/eb693/images/docs/container_evolution.svg" alt="Docker vs Virtual machines">
+      </section>
+
+      <section>
+        <h2>Container Engines</h2>
+        <ul>
+          <li>chroot</li>
+          <li>LXC</li>
+          <li>Docker<sup>*</sup></li>
+          <li>RKT<sup>*</sup></li>
+          <li class="fragment">runC<sup>*</sup></li>
+        </ul>
+        <p><sup>*</sup> Open Container Initiative</p>
+      </section>
+
+      <section>
+        <h2>Container</h2>
+        <p>own disk (OS read-only or layered)</p>
+        <p>own network</p>
+        <p>shared CPU & memory</p>
+        <p class="fragment">each container should run one application</p>
+      </section>
+
+      <section>
+        <h2>Advantages</h2>
+        <p>
+          fixed container images
+        </p>
+        <ul>
+          <li>fixed dependencies</li>
+          <li>better testing</li>
+          <li>easier scaling</li>
+          <li>easier distribution</li>
+        </ul>
+        <p>isolated applications - better security</p>
+        <p>better resource utilization</p>
+      </section>
+
+      <section>
+        <h2>Problem</h2>
+        <p>lot of containers</p>
+        <p>monitoring / keep all containers running</p>
+        <p>linking containers</p>
+        <p class="fragment">Kubernetes tries to solve this</p>
+      </section>
+    </section>
+
+    <section>
+      <section>
+        <h2>Kubernetes</h2>
+      </section>
+
+      <section>
+        <h2>Kubernetes</h2>
+        <p>Service discovery and load balancing</p>
+        <p>Storage orchestration</p>
+        <p>Automated rollouts and rollback</p>
+        <p>Automatic bin packing</p>
+        <p>Managing multiple nodes / auto scaling</p>
+        <p>Self-healing</p>
+        <p>Secret and configuration management</p>
+      </section>
+
+      <section>
+        <h2>API based</h2>
+        <p>whole communication is API based, mostly async</p>
+        <p>Kubernetes takes care to bring the cluster to the needed state</p>
+        <p>CLI command available: kubectl</p>
+      </section>
+
+      <section>
+        <h2>kubectl</h2>
+        <p>Client which just calls API</p>
+        <p>Requires credentials to access the system</p>
+        <p>Uses YAML/JSON to describe resources</p>
+      </section>
+
+    </section>
+
+    <section>
+      <section>
+        <h2>Resources</h2>
+      </section>
+
+      <section>
+        <h2>Resources</h2>
+        <ul>
+          <li>Nodes</li>
+          <li>Namespaces</li>
+          <li>Workloads (Pod, Deployment, StatefulSet, Job, CronJob)</li>
+          <li>Networks (Service, Endpoint, Ingress)</li>
+          <li>Storage (Persistent Volume/Claim)</li>
+          <li>Configuration (ConfigMap, Secret)</li>
+          <li>Custom Resources</li>
+        </ul>
+      </section>
+
+    </section>
+
+    <section>
+      <section>
+        <h2>Workloads</h2>
+      </section>
+
+      <section>
+        <h2>Workloads - Pod</h2>
+        <p>all other workloads create pods</p>
+        <p>similar to a container, runs an application</p>
+        <p>can group containers</p>
+        <p>for Deployment/Statefulset includes livenessProbe/readniessProbe</p>
+      </section>
+
+      <section>
+        <h2>Workloads - Deployment</h2>
+        <p>for stateless application, e.g. Webserver</p>
+        <p>multiple pods - depends on "spec.replicas"</p>
+        <p>includes a deployment strategy</p>
+      </section>
+
+      <section>
+        <h2>Workloads - StatefulSet</h2>
+        <p>for stateful application, e.g. DB, Solr</p>
+        <p>multiple pods - depends on "spec.replicas"</p>
+        <p>includes a deployment strategy</p>
+      </section>
+
+      <section>
+        <h2>Workloads - Job</h2>
+        <p>Runs a pod till its finished</p>
+        <p>Define how often a pod should be started</p>
+        <p>Define how many pods in parallel can run</p>
+      </section>
+
+      <section>
+        <h2>Workloads - CronJob</h2>
+        <p>periodical run a job</p>
+      </section>
+    </section>
+
+    <section>
+      <section>
+        <h2>Networks</h2>
+      </section>
+
+      <section>
+        <h2>Networks - Service</h2>
+        <p>expose network for other pods</p>
+        <p>includes load balancer</p>
+        <pre class="fragment"><code>SVC.NS.svc.cluster.local</code></pre>
+        <pre class="fragment"><code>mariadb.shared-services.svc.cluster.local</code></pre>
+      </section>
+
+      <section>
+        <h2>Ingress</h2>
+        <p>exposes network outside kubernetes</p>
+        <p class="fragment">we use traefik</p>
+      </section>
+
+      <section>
+        <img style="background: white" src="https://containo.us/assets/img/traefik/diagram/diagram.png" alt="traefik">
+      </section>
+    </section>
+
+    <section>
+      <section>
+        <h2>Configuration</h2>
+      </section>
+
+      <section>
+        <h2>Configuration - ConfigMap</h2>
+        <p>configuration to be used by pods</p>
+        <p>either as environment variable or file or K8S API</p>
+      </section>
+    </section>
+
+    <section>
+      <section>
+        <h2>Additional tools</h2>
+      </section>
+
+      <section>
+        <h2>helm</h2>
+        <p>package manager for K8S</p>
+        <p>easy updates</p>
+        <p>manages dependencies</p>
+        <p>creating own charts</p>
+      </section>
+
+      <section>
+        <h2>Prometheus</h2>
+        <p>collects metrics of pods</p>
+        <p>alerting rules</p>
+        <p>display in grafana</p>
+      </section>
+
+      <section>
+        <h2>Loki</h2>
+        <p>collects logs from pods</p>
+        <p>display in grafana</p>
+      </section>
+    </section>
+
+  </div>
+
+</div>
+
+<script src="reveal.js/js/reveal.js"></script>
+
+<script>
+
+  // More info https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    center: true,
+    hash: true,
+
+    transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+    // More info https://github.com/hakimel/reveal.js#dependencies
+    dependencies: [
+      { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'reveal.js/plugin/highlight/highlight.js' },
+      { src: 'reveal.js/plugin/search/search.js', async: true },
+      { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+      { src: 'reveal.js/plugin/notes/notes.js', async: true }
+    ]
+  });
+
+</script>
+
+</body>
+</html>
